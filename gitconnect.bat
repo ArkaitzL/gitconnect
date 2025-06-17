@@ -23,9 +23,11 @@ echo Ruta base actual: %CD:\=/%
 echo.
 
 :PEDIR_CARPETA
-set /p SUBCARPETA=C: Escribe el nombre de la subcarpeta: 
+set /p SUBCARPETA=C: Escribe el nombre de la subcarpeta (Enter carpeta actual): 
 
-set "CARPETA=%CD%\%SUBCARPETA%"
+set "CARPETA=%CD%"
+if not "%SUBCARPETA%"=="" set "CARPETA=%CD%\%SUBCARPETA%"
+
 if not exist "!CARPETA!" (
     echo ERROR: La carpeta "!CARPETA!" no existe. Intenta de nuevo.
     goto PEDIR_CARPETA
@@ -63,17 +65,21 @@ if "%REPO%"=="" (
     goto PEDIR_REPO
 )
 
-:: Comprobar si repo remoto NO está vacío
-set REMOTO_NO_VACIO=
-for /f %%i in ('git ls-remote "!REPO!" ^| findstr "refs/heads/main"') do set REMOTO_NO_VACIO=1
-
-if defined REMOTO_NO_VACIO (
-    echo ERROR: El repositorio remoto NO está vacío. Usa un repositorio nuevo y vacío.
-    goto PEDIR_REPO
-)
-
+:: Configura remote (si ya existe, elimina y añade para evitar error)
+git remote remove origin >nul 2>&1
 git remote add origin "!REPO!"
 git branch -M main
+
+echo.
+echo --------------------------------------------
+echo Sincronizando con repositorio remoto...
+echo --------------------------------------------
+echo.
+
+:: Hacer pull para evitar errores de historial no relacionado (ej: README inicial)
+git pull origin main --allow-unrelated-histories --no-edit
+
+:: Subir al repositorio
 git push -u origin main
 
 echo.
@@ -83,3 +89,4 @@ echo --------------------------------------------
 echo.
 
 pause
+exit /b
