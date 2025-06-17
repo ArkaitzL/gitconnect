@@ -63,18 +63,6 @@ if "%REPO%"=="" (
     goto PEDIR_REPO
 )
 
-:: Comprobar acceso al repositorio y capturar error
-@REM git ls-remote --exit-code "!REPO!" >temp_git_error.txt 2>&1
-@REM if errorlevel 1 (
-@REM     echo ERROR: No se pudo acceder al repositorio remoto. Revisa la URL.
-@REM     echo Mensaje de error detallado:
-@REM     type temp_git_error.txt
-@REM     del temp_git_error.txt
-@REM     echo.
-@REM     goto PEDIR_REPO
-@REM )
-@REM del temp_git_error.txt
-
 :: Comprobar si repo remoto NO está vacío
 set REMOTO_NO_VACIO=
 for /f %%i in ('git ls-remote "!REPO!" ^| findstr "refs/heads/main"') do set REMOTO_NO_VACIO=1
