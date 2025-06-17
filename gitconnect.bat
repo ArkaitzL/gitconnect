@@ -30,6 +30,7 @@ if not "%SUBCARPETA%"=="" set "CARPETA=%CD%\%SUBCARPETA%"
 
 if not exist "!CARPETA!" (
     echo ERROR: La carpeta "!CARPETA!" no existe. Intenta de nuevo.
+    echo.
     goto PEDIR_CARPETA
 )
 
@@ -62,6 +63,7 @@ set /p REPO=C: Pega la URL del repositorio GitHub (ej: https://github.com/usuari
 
 if "%REPO%"=="" (
     echo ERROR: No ingresaste ninguna URL. Intenta de nuevo.
+    echo.
     goto PEDIR_REPO
 )
 
